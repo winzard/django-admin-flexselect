@@ -80,7 +80,7 @@ def instance_from_request(request, widget):
                 except ValidationError:
                     pass
         return widget.base_field.model(**values)
-    
+
 class FlexSelectWidget(Select):
     instances = {}
     """ Instances of widgets with their hashed names as keys."""
@@ -101,7 +101,7 @@ class FlexSelectWidget(Select):
         self.request = request
         
         self.hashed_name = self._hashed_name()
-        FlexSelectWidget.instances[self.hashed_name] = self
+        self.__class__.instances[self.hashed_name] = self
         super(FlexSelectWidget, self).__init__(*args, **kwargs)
         
     def _hashed_name(self):

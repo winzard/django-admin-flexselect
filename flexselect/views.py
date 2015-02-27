@@ -14,7 +14,8 @@ def field_changed(request):
     html for new options and details for the dependent field as json.
     """
     hashed_name = request.POST.__getitem__('hashed_name')
-    widget = FlexSelectWidget.instances[hashed_name]    
+    # if hashed_name in FlexSelectWidget.__class__.instances:
+    widget = FlexSelectWidget.instances[hashed_name]
     instance = instance_from_request(request, widget)
     try:
         value_fk = getattr(instance, widget.base_field.name)
