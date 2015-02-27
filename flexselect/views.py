@@ -5,7 +5,7 @@ from django.forms.widgets import Select
 from django.contrib.auth.decorators import login_required
 
 from flexselect import (FlexSelectWidget, choices_from_instance, 
-                        details_from_instance, instance_from_request)
+                        details_from_instance, instance_from_request, Storage)
 
 @login_required
 def field_changed(request):
@@ -15,7 +15,7 @@ def field_changed(request):
     """
     hashed_name = request.POST.__getitem__('hashed_name')
     # if hashed_name in FlexSelectWidget.__class__.instances:
-    widget = FlexSelectWidget.instances[hashed_name]
+    widget = Storage().__class__.instances[hashed_name]
     instance = instance_from_request(request, widget)
     try:
         value_fk = getattr(instance, widget.base_field.name)

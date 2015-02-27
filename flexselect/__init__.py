@@ -81,8 +81,23 @@ def instance_from_request(request, widget):
                     pass
         return widget.base_field.model(**values)
 
-class FlexSelectWidget(Select):
+class MetaDict(type):
     instances = {}
+    def __getitem__(cls, key):
+        return cls.instances[key]
+    def __setitem__(cls, key, value):
+        cls.instances[key] = value
+    def __str__(cls):
+        return cls.instances.__str__()
+    def iteritems(cls):
+        return cls.instances.iteritems()
+
+class Storage(object):
+    __metaclass__ = MetaDict
+
+
+class FlexSelectWidget(Select):
+
     """ Instances of widgets with their hashed names as keys."""
     
     class Media:
@@ -92,6 +107,7 @@ class FlexSelectWidget(Select):
             js.append('%s/jquery/1.6.1/jquery.min.js' % googlecdn)
             js.append('%s/jqueryui/1.8.13/jquery-ui.min.js' % googlecdn)
         js.append('flexselect/js/flexselect.js')
+
         
     def __init__(self, base_field, modeladmin, request, *args, 
                  **kwargs):
@@ -101,7 +117,7 @@ class FlexSelectWidget(Select):
         self.request = request
         
         self.hashed_name = self._hashed_name()
-        self.__class__.instances[self.hashed_name] = self
+        Storage().__class__.instances[self.hashed_name] = self
         super(FlexSelectWidget, self).__init__(*args, **kwargs)
         
     def _hashed_name(self):
